@@ -87,7 +87,33 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #utilizamos una pila para implementar la frontera o fringe
+    frontera = util.Stack()
+    #creamos una lista para ir poniendo los nodos visitados
+    visitados = []
+    # creamos  una lista para ir almacenando las acciones posibles
+    listaAcciones = []
+    # metemos a la pila el estado inicial y la lista de acciones vacias 
+    frontera.push((problem.getStartState(), listaAcciones))
+    
+    #mientras haya algun elemento en la frontera
+    while frontera:
+        """sacamos las coordenadas del nodo que este mas arriba del stack y lista que contiene las acciones 
+   |       para llegar a el  """
+        nodo, acciones = frontera.pop() 
+        if not nodo in visitados:    
+            visitados.append(nodo)          #si el nodo no habia sido visitado entonces lo metemos a la lista de visitados
+            if problem.isGoalState(nodo): 
+                return acciones             #si el nodo es el  nodo objetivo entonces devolvemos su lista de acciones
+            
+            for siguiente in problem.getSuccessors(nodo):       #obtenemos los sucesores del nodo actual
+                coordenada, direccion, costo = siguiente        #de cada sucesor almacenamos su coordenada, direccion y costo
+                siguientesAcciones = acciones + [direccion]     #creamos una nueva variable que actualice la lista de acciones 
+                                                                #con la  última direccion del nodo sucesor 
+                frontera.push((coordenada, siguientesAcciones)) #metemos a la frontera la coordenada y lista de acciones del sucesor
+    
+    return [] #si no  se encuentra  el nodo objetivo entonces solo se devueve una lista vacia de acciones
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
