@@ -118,12 +118,50 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    #Usamos una cola , para que la búsqueda explore todos los nodos que estén en un mismo nivel antes de avanzar al 
+    #siguiente nivel
+    frontera = util.Queue()
+    
+    visitados = []
+    
+    listaAcciones = []
+    
+    frontera.push((problem.getStartState(), listaAcciones))
+    while frontera:
+        nodo, acciones = frontera.pop()
+        if not nodo in visitados:
+            visitados.append(nodo)
+            if problem.isGoalState(nodo):
+                return acciones
+            for siguiente in problem.getSuccessors(nodo):
+                coordenada, direccion, costo = siguiente
+                siguientesAcciones = acciones + [direccion]
+                frontera.push((coordenada, siguientesAcciones))
+    return []
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    frontera = util.PriorityQueue()
+
+    visitados = []
+    listaAcciones = []
+    frontera .push((problem.getStartState(), listaAcciones), problem)
+    while frontera:
+        nodo, acciones = frontera.pop()
+        if not nodo in visitados:
+            visitados.append(nodo)
+            if problem.isGoalState(nodo):
+                return acciones
+            for siguiente in problem.getSuccessors(nodo):
+                coordenada, direccion, costo = siguiente
+                siguientesAcciones = acciones + [direccion]
+                siguienteCosto = problem.getCostOfActions(siguientesAcciones)
+                #print(siguienteCosto)
+                frontera.push((coordenada, siguientesAcciones), siguienteCosto)
+    return []
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -139,7 +177,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     franja = util.PriorityQueue()
     # Creamos un lista donde se almacenaran los nodos ya visitados
     visitados = []
-    # Lista para listar Acciones
+    # Lista para las Acciones
     listaAcciones = []
     # Iniciamilamos la franja en su estado inicial con la lista de acciones y con las heurisitcas
     franja.push((problem.getStartState(), listaAcciones), heuristic(problem.getStartState(), problem))
@@ -158,7 +196,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     return [] 
 
 # Abbreviations
-bfs = breadthFirstSearch
+bfs = breadthFirstSearch 
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
